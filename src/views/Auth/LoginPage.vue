@@ -54,9 +54,11 @@
 </template>
 <script>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter} from 'vue-router';
 export default {
     setup() {
+        const router  = useRouter();
         const contenedor = ref(false);
         const registro = ref({
             name: '',
@@ -69,6 +71,16 @@ export default {
             password: '',
         })
         let urlBase = "https://api.repuestosangel.net/api/";
+
+        onMounted(() => {
+            // verificar si existe el usuario y el token en el localStorage
+            let usuario = localStorage.getItem('usuario');
+            let token = localStorage.getItem('token');
+            if(usuario != null && token != null){
+                router.push('/home');
+            }
+        });
+
         const nuevoRegistro = async () => {
             if (registro.value.name != '' && registro.value.email != '' && registro.value.password != '' && registro.value.password_confirmation != '') {
                 try {
@@ -97,6 +109,12 @@ export default {
                 usuario = data.user;
                 localStorage.setItem('token', access_token);
                 localStorage.setItem('usuario', JSON.stringify(usuario));
+
+                // verificar usuario y redireccionar a /home
+                if(usuario != null && access_token !=null){
+                    router.push('/home');
+                }
+
             } catch (error) {
                 console.log(error);
             }

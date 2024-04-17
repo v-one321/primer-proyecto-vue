@@ -8,7 +8,10 @@ import VentasComponent from "../views/SistemaVentas/Ventas.vue";
 import NuevaVentaComponent from "../views/SistemaVentas/Carrito.vue";
 import PageNotFound from "../views/errors/404.vue";
 import LayoutApp from "@/layout/LayoutApp.vue";
-import LoginPage from "@/views/Auth/LoginPage.vue"
+import LoginPage from "@/views/Auth/LoginPage.vue";
+
+// importamos perfilView
+import PerfilView from "../views/PerfilView.vue";
 
 const routes = [
   {
@@ -24,6 +27,15 @@ const routes = [
         name: "home",
         component: HomeView,
       },
+
+      // ruta para el perfil
+      {
+        path: "/perfil",
+        name: "perfil",
+        component: PerfilView,
+      },
+
+
       {
         path: "/about",
         name: "about",
