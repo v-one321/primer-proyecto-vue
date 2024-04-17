@@ -34,6 +34,16 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
+                            <label for="precio_compra">Precio compra <small class="text-danger">*</small></label>
+                            <input type="text" class="form-control" name="precio_compra" id="precio_compra"
+                                placeholder="12.5" v-model="producto.precio_compra"
+                                :class="{ 'border-danger': detectados.precio_compra }">
+                            <small class="text-danger" v-show="detectados.precio_compra">{{
+                                detectados.precio_compra }}</small>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
                             <label for="descripcion">Descripcion</label>
                             <textarea class="form-control" name="descripcion" id="descripcion" placeholder="Escriba"
                                 v-model="producto.descripcion"></textarea>
@@ -61,21 +71,20 @@ export default {
             nombre: '',
             descripcion: '',
             precio_venta: '',
+            precio_compra: '',
         });
         const detectados = ref({});
-        const usuario = {
-            username: 'vladin321@gmail.com',
-            password: '78941557'
-        };
-        const basicAuth = btoa(usuario.username + ':' + usuario.password);
+        let token = localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Basic ' + basicAuth
+            'Authorization': 'Bearer ' + token
         }
         let urlBase = 'https://api.repuestosangel.net/api/';
         onMounted(() => {
-            if (productoId != '') {
+            if (token == null) {
+                router.push({ path: '/login' });
+            } else if (productoId != '') {
                 editarProducto();
             }
         })
@@ -107,6 +116,7 @@ export default {
                     nombre: datos.nombre,
                     descripcion: datos.descripcion,
                     precio_venta: datos.precio_venta,
+                    precio_compra: datos.precio_compra,
                 };
             } catch (error) {
                 console.log(error)

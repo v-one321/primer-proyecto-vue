@@ -27,23 +27,73 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><router-link class="dropdown-item" to="/productos">Productos</router-link></li>
+                            <li><router-link class="dropdown-item" to="/proveedores">Proveedores</router-link></li>
                             <li><router-link class="dropdown-item" to="/ventas">Ventas</router-link></li>
                         </ul>
                     </li>
                 </ul>
             </div>
+            <form class="form-inline my-2 my-lg-0">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img :src="usuario.foto_perfil != null ? urlBase + 'imagenes/' + usuario.foto_perfil : 'https://ui-avatars.com/api/?background=cef2ef&color=00685f&name=' + usuario.name"
+                                style="width: 30px; height: 30px;" class="rounded-circle border border-dark" alt="">
+                            {{ usuario.name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><router-link class="dropdown-item" to="/perfil">Perfil</router-link></li>
+                            <li><button type="button" class="dropdown-item" @click="cerrarSesion">Salir</button></li>
+                        </ul>
+                    </li>
+                </ul>
+            </form>
         </div>
     </nav>
-    <div class="container d-flex justify-content-end mb-4">
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Library</li>
-            </ol>
-        </nav>
-    </div>
 
     <!-- ABRE CONTENIDO DE LAS VISTAS-->
     <router-view />
     <!-- CIERRA CONTENIDO DE LAS VISTAS-->
 </template>
+<script>
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+export default {
+    setup() {
+        const usuario = ref({});
+        const router = useRouter()
+        const urlBase = ref("https://api.repuestosangel.net/");
+        let token = null;
+        onMounted(() => {
+            // verificar si existe usuario y token en el localStorage
+            let usuarioStorage = localStorage.getItem("usuario");
+            token = localStorage.getItem("token");
+            if (usuarioStorage == null && token == null) {
+                router.push("/login");
+            }
+            usuario.value = JSON.parse(usuarioStorage);
+        })
+        const cerrarSesion = async () => {
+            try{
+                let post = {};
+                let cabecera = {
+                    Authorization: "Bearer " + token,
+                };
+                const { data } =  await axios.post(urlBase.value+'api/logout', post, { headers: cabecera });
+                localStorage.removeItem('token');
+                localStorage.removeItem('usuario');
+                router.push("/login");
+            }catch(error){
+                console.log(error);
+            }
+        }
+        return {
+            usuario,
+            urlBase,
+            cerrarSesion,
+        }
+    }
+}
+</script>

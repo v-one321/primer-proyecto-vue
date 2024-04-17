@@ -9,7 +9,8 @@ import NuevaVentaComponent from "../views/SistemaVentas/Carrito.vue";
 import PageNotFound from "../views/errors/404.vue";
 import LayoutApp from "@/layout/LayoutApp.vue";
 import LoginPage from "@/views/Auth/LoginPage.vue";
-
+import ProveedoresComponent from "../views/SistemaVentas/Proveedores.vue";
+import FormularioProveedorComponent from "../views/SistemaVentas/FormularioProveedor.vue";
 // importamos perfilView
 import PerfilView from "../views/PerfilView.vue";
 
@@ -72,6 +73,14 @@ const routes = [
         path: "/nuevaVenta",
         component: NuevaVentaComponent,
       },
+      {
+        path: "/proveedores",
+        component: ProveedoresComponent,
+      },
+      {
+        path: "/proveedor-formulario/:idProveedor?",
+        component: FormularioProveedorComponent
+      }
     ],
   },
   {

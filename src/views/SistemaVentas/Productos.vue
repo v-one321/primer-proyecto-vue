@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -16,7 +16,9 @@
                                                 <th>Item</th>
                                                 <th>Codigo</th>
                                                 <th>Nombre</th>
-                                                <th>Percio <small class="text-danger">(Venta)</small></th>
+                                                <th>Precio <small class="text-danger">(Compra)</small></th>
+                                                <th>Precio <small class="text-danger">(Venta)</small></th>
+                                                <th>Stock</th>
                                                 <th>Descripcion</th>
                                                 <th>Estado</th>
                                                 <th>Operaciones</th>
@@ -27,7 +29,9 @@
                                                 <td>{{ indice + 1 }}</td>
                                                 <td>{{ item.codigo }}</td>
                                                 <td>{{ item.nombre }}</td>
-                                                <td>{{ item.precio_venta }}</td>
+                                                <td>{{ item.precio_compra }}</td>
+                                                <td>{{ item.precio_venta}}</td>
+                                                <td>{{ item.cantidad}}</td>
                                                 <td>{{ item.descripcion }}</td>
                                                 <td><span class="badge"
                                                         :class="item.estado ? 'bg-success' : 'bg-danger'">{{
@@ -79,19 +83,19 @@ export default {
     setup() {
         const router = useRouter();
         const items = ref([]);
-        const usuario = {
-            username: 'vladin321@gmail.com',
-            password: '78941557'
-        };
-        const basicAuth = btoa(usuario.username + ':' + usuario.password);
+        let token = localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Basic ' + basicAuth
+            'Authorization': 'Bearer ' + token
         }
         let urlBase = 'https://api.repuestosangel.net/api/';
         onMounted(() => {
-            listar();
+            if(token == null){
+                router.push({path: '/login'});
+            }else{
+                listar();
+            }
         });
         const paginacion = ref({
             pagina: 1,

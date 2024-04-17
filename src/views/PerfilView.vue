@@ -6,12 +6,9 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body">
                             <div class="text-center">
-
-                                <img v-if="usuario.foto_perfil != null" :src="usuario.foto_perfil" alt="" style="width: 150px; height: 150px;">
-
-                                <img v-else :src="'https://ui-avatars.com/api/?background=cef2ef&color=00685f&name=' +
-                                    usuario.name
-                                    " alt="" class="rounded-circle border border-dark" />
+                                <img v-if="usuario.foto_perfil != null" :src="urlBase + 'imagenes/' + usuario.foto_perfil" alt="" class="rounded-circle border border-dark"
+                                    style="width: 150px; height: 150px;">
+                                <img v-else :src="'https://ui-avatars.com/api/?background=cef2ef&color=00685f&name=' + usuario.name " alt="" class="rounded-circle border border-dark" />
                                 <h4 class="mt-2">{{ usuario.name }}</h4>
                                 <h6 class="text-muted">Dev. Fullstack</h6>
                             </div>
@@ -25,15 +22,15 @@
                                 <li class="list-group-item">
                                     <b>Fecha registro:</b>
                                     {{
-                                    new Date(usuario.created_at).toLocaleDateString("es-BO", {
-                                        weekday: "long",
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                        hour: "numeric",
-                                        minute: "numeric",
-                                    })
-                                }}
+                                        new Date(usuario.created_at).toLocaleDateString("es-BO", {
+                                            weekday: "long",
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                            hour: "numeric",
+                                            minute: "numeric",
+                                        })
+                                    }}
                                 </li>
                                 <li class="list-group-item">
                                     <b>Fecha actualizacion:</b>
@@ -44,8 +41,8 @@
                                             month: "long",
                                             day: "numeric",
                                             hour: "numeric",
-                                    minute: "numeric",
-                                    })
+                                            minute: "numeric",
+                                        })
                                     }}
                                 </li>
                             </ul>
@@ -111,17 +108,19 @@
 
                             <div class="form-grou">
                                 <label for="imagen">Foto de perfil</label>
-                                <input type="file" id="imagen" @change="subirImagen($event)" class="form-control">
+                                <input type="file" id="imagen" @change="subirImagen($event)" class="form-control" accept="image/*">
                             </div>
 
                             <div class="text-center">
-                                <img :src="urlImagen" class="border border-dark rounded-circle" alt="Img" style="width: 150px; height: 150px;">
+                                <img :src="urlImagen" class="border border-dark rounded-circle" alt="Img"
+                                    style="width: 150px; height: 150px;" v-show="urlImagen != null">
                             </div>
 
                             <div class="text-center mt-3">
-                                <button type="button" @click="actualizarFoto()" class="btn btn-primary">Actualizar foto</button>
+                                <button type="button" @click="actualizarFoto()" class="btn btn-primary">Actualizar
+                                    foto</button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -143,18 +142,19 @@ export default {
         const email = ref("");
         const password = ref("");
         const password_confirmation = ref("");
-        let urlBase = "https://api.repuestosangel.net/";
+        const urlBase = ref("https://api.repuestosangel.net/");
         const mensaje = ref(null);
         // para url de la imagen
         const imagen = ref(null);
         const urlImagen = ref(null);
-
+        let usuarioStorage = null;
+        let token = null;
         onMounted(() => {
-            // verificar si existe usuario y token en el localStorage
-            let usuarioStorage = localStorage.getItem("usuario");
-            let token = localStorage.getItem("token");
+            // verificar si existe usuario y token en el localStorage            
+            usuarioStorage = localStorage.getItem("usuario");            
+            token = localStorage.getItem("token");
             if (usuarioStorage == null && token == null) {
-                router.push("/login");
+                router.push({path: "/login"});
             }
             usuario.value = JSON.parse(usuarioStorage);
 
@@ -196,7 +196,7 @@ export default {
 
             try {
                 const { data } = await axios.put(
-                    urlBase + "api/usuario/" + usuario.value.id,
+                    urlBase.value + "api/usuario/" + usuario.value.id,
                     objeto,
                     { headers: cabecera }
                 );
@@ -224,10 +224,9 @@ export default {
 
         // subirImagen
         const subirImagen = async (event) => {
-            console.log(event.target.files);
             // obtener los archivos del input
             let archivo = event.target.files[0];
-            if(archivo != null){
+            if (archivo != null) {
                 imagen.value = archivo;
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -239,23 +238,27 @@ export default {
 
         // actualizarFoto  
         const actualizarFoto = async () => {
+            if(imagen.value == null){
+                alert('Debe seleccionar una imagen.')
+                return;
+            }
             const formData = new FormData();
             formData.append('imagen', imagen.value);
             formData.append('id', usuario.value.id);
-
             let token = localStorage.getItem("token");
-
             // cabecera de la peticion
             let cabecera = {
                 "Content-Type": "multipart/form-data",
                 Authorization: "Bearer " + token,
             };
-
-            const { data } = await axios.post(urlBase + 'api/actualizar-imagen', formData, { headers: cabecera });
-            console.log(data);
-            
-            usuario.value.foto_perfil = urlImagen.value;
-
+            try {
+                const { data } = await axios.post(urlBase.value + 'api/actualizar-imagen', formData, { headers: cabecera });
+                //usuario.value.foto_perfil = urlImagen.value;
+                localStorage.setItem('usuario', JSON.stringify(data.datos));
+                usuario.value = data.datos;
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         return {
@@ -266,10 +269,10 @@ export default {
             password_confirmation,
             actualizar,
             mensaje,
-
             urlImagen,
             subirImagen,
-            actualizarFoto
+            actualizarFoto,
+            urlBase
         };
     },
 };
