@@ -32,8 +32,8 @@
                         </div>
                     </div>
                     <div class="card-footer text-end bg-dark">
-                        <button type="button" class="btn btn-danger" @click="cancelar">Cancelar</button>
-                        <button class="btn btn-success" @click="guardar">Guardar</button>
+                        <button type="button" class="btn btn-danger m-2" @click="cancelar">Cancelar</button>
+                        <button class="btn btn-success m-2" @click="guardar">Guardar</button>
                     </div>
                 </div>
             </div>

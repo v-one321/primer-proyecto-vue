@@ -16,6 +16,8 @@ import PerfilView from "../views/PerfilView.vue";
 // para clientes
 import ClientesComponent from "../views/SistemaVentas/Clientes.vue";
 import FormularioClienteComponent from "../views/SistemaVentas/FormularioCliente.vue";
+// compras
+import ComprasComponent from "../views/SistemaVentas/Compras.vue";
 
 const routes = [
   {
@@ -91,7 +93,11 @@ const routes = [
       {
         path: "/cliente-formulario/:idCliente?",
         component: FormularioClienteComponent
-      }
+      },
+      {
+        path: "/compras",
+        component: ComprasComponent,
+      },
     ],
   },
   {
