@@ -14,6 +14,7 @@
                                         <th>Item</th>
                                         <th>Nombre</th>
                                         <th>Codigo</th>
+                                        <th>Cantidad</th>
                                         <th>Precio Venta</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -23,6 +24,7 @@
                                         <td>{{ indice + 1 }}</td>
                                         <td>{{ item.nombre }}</td>
                                         <td>{{ item.codigo }}</td>
+                                        <td>{{ item.cantidad }}</td>
                                         <td>{{ item.precio_venta }}</td>
                                         <td class="text-center">
                                             <div class="btn-group">
@@ -59,6 +61,14 @@
                         <h4 class="card-title">🛒 Carrito</h4>
                     </div>
                     <div class="card-body">
+                        <div class="form-group mb-4">
+                            <label for="cliente_id">Clientes</label>
+                            <select id="cliente_id" v-model="cliente_id" class="form-control">
+                                <option :value="null">Seleccione</option>
+                                <option :value="cliente.id" v-for="cliente in clientes" :key="cliente.id">{{
+                                    cliente.nombre }} {{ cliente.apellido ? cliente.apellido : '' }}</option>
+                            </select>
+                        </div>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead class="table-dark">
@@ -133,16 +143,12 @@ export default {
     setup() {
         const router = useRouter();
         const items = ref([]);
-        const usuario = {
-            username: "vladin321@gmail.com",
-            password: "78941557",
-        };
-        const basicAuth = btoa(usuario.username + ":" + usuario.password);
+        let token = localStorage.getItem('token');
         const headers = {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: "Basic " + basicAuth,
-        };
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
         let urlBase = "https://api.repuestosangel.net/api/";
         const paginacion = ref({
             pagina: 1,
@@ -152,8 +158,15 @@ export default {
         });
         const total = ref(0);
         const carrito = ref([]);
+        const clientes = ref([]);
+        const cliente_id = ref(null);
         onMounted(() => {
-            listar();
+            if (token == null) {
+                router.push({ path: '/login' });
+            } else {
+                listar();
+                listarClientes();
+            }
         });
         const listar = async () => {
             try {
@@ -201,18 +214,22 @@ export default {
         const obtenerProducto = async (param) => {
             try {
                 const {
-                    data: { datos },
-                } = await axios.get(urlBase + "productos/" + param, { headers });
+                    data: { datos }, } = await axios.get(urlBase + "productos/" + param, { headers });
                 if (!evaluarIdProducto(datos.id)) {
-                    carrito.value.push({
-                        producto_id: datos.id,
-                        nombre: datos.nombre,
-                        precio_unitario: datos.precio_venta,
-                        cantidad: 1,
-                        precio_total: datos.precio_venta,
-                    });
-                    localStorage.setItem("carrito", JSON.stringify(carrito.value));
-                    sumarTotal();
+                    if (datos.cantidad > 0) {
+                        carrito.value.push({
+                            producto_id: datos.id,
+                            nombre: datos.nombre,
+                            precio_unitario: datos.precio_venta,
+                            cantidad: 1,
+                            precio_total: datos.precio_venta,
+                            stock: datos.cantidad,
+                        });
+                        localStorage.setItem("carrito", JSON.stringify(carrito.value));
+                        sumarTotal();
+                    } else {
+                        alert("El stock del producto es 0");
+                    }
                 } else {
                     alert("El producto ya se encuentra registrado en la tabla Carrito");
                 }
@@ -253,12 +270,16 @@ export default {
             }
         };
         const incrementarCantidad = (param) => {
-            carrito.value[param].cantidad++;
-            carrito.value[param].precio_total = (
-                carrito.value[param].cantidad * carrito.value[param].precio_unitario
-            ).toFixed(2);
-            localStorage.setItem("carrito", JSON.stringify(carrito.value));
-            sumarTotal();
+            if (carrito.value[param].cantidad < carrito.value[param].stock) {
+                carrito.value[param].cantidad++;
+                carrito.value[param].precio_total = (
+                    carrito.value[param].cantidad * carrito.value[param].precio_unitario
+                ).toFixed(2);
+                localStorage.setItem("carrito", JSON.stringify(carrito.value));
+                sumarTotal();
+            } else {
+                alert('La cantidad requerida es mayor al STOCK del producto.');
+            }
         };
         const reducirCantidad = (param) => {
             if (carrito.value[param].cantidad > 1) {
@@ -272,8 +293,13 @@ export default {
         };
         const terminarProceso = () => {
             if (carrito.value.length > 0) {
+                if (cliente_id.value == null) {
+                    alert("Debe seleccionar un cliente, Gracias");
+                    return;
+                }
                 let informacion = {
                     total: total.value,
+                    cliente_id: cliente_id.value,
                     detalle: carrito.value,
                 };
                 const confirmacion = confirm("¿Está seguro de Finalizar la VENTA?");
@@ -292,6 +318,14 @@ export default {
                 alert("Debe agregar al menos 1 producto a la tabla carrito, Gracias");
             }
         };
+        const listarClientes = async () => {
+            try {
+                const { data: { datos } } = await axios.get(urlBase + 'clientes-activos', { headers });
+                clientes.value = datos;
+            } catch (error) {
+                console.log(error);
+            }
+        }
         return {
             items,
             paginacion,
@@ -305,6 +339,8 @@ export default {
             carrito,
             total,
             terminarProceso,
+            clientes,
+            cliente_id
         };
     },
 };

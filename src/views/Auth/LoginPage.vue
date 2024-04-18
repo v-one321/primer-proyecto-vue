@@ -28,11 +28,12 @@
                         <a href="#" class="icon"><i class='bx bxl-github'></i></a>
                     </div>
                     <samp>O usa un email y contraseña</samp>
-                    <input type="email" placeholder="Email" v-model="iniciarSesion.email">
-                    <input type="password" placeholder="Password" v-model="iniciarSesion.password">
+                    <input type="email" placeholder="Email" class="border-danger" v-model="iniciarSesion.email">
+                    <small class="text-danger" v-show="errores.email">{{ errores.email }}</small>
+                    <input type="password" placeholder="Password" v-model="iniciarSesion.password" >                    
+                    <small class="text-danger" v-show="errores.password">{{ errores.password }}</small>
                     <a href="#" class="fp">Recuperar contraseña?</a>
                     <button type="button" @click="login">Ingresar</button>
-                    <button type="button" @click="logout">Cerrar Sesion</button>
                 </form>
             </div>
             <div class="toggle-container">
@@ -71,7 +72,7 @@ export default {
             password: '',
         })
         let urlBase = "https://api.repuestosangel.net/api/";
-
+        const errores = ref({});
         onMounted(() => {
             // verificar si existe el usuario y el token en el localStorage
             let usuario = localStorage.getItem('usuario');
@@ -114,26 +115,13 @@ export default {
                 if(usuario != null && access_token !=null){
                     router.push('/home');
                 }
-
             } catch (error) {
-                console.log(error);
-            }
-        }
-        const logout = async () => {
-            let token = localStorage.getItem('token');  //obtenemos el token almacenado desde el localStorage
-            try {
-                let post = {};  //enviamos un objeto vacio de relleno para la peticion POST
-                const { data } = await axios.post(urlBase + 'logout', post, {
-                    headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                    }
-                }); //enviamos la peticion axios con el header configurado
-                localStorage.removeItem('token'); 
-                localStorage.removeItem('usuario'); //removemos el token y el usuario desde el localStorage
-                alert('Sesion Finalizada'); //muestra una alerta nativa de js
-            } catch (error) {
-                console.log(error);
+                if(error.response.status == 422){
+                    errores.value = error.response.data.errors;
+                    console.log(errores.value.email)
+                }else if(error.response.status == 401){
+                    alert(error.response.data.mensaje);
+                }
             }
         }
         return {
@@ -142,11 +130,15 @@ export default {
             nuevoRegistro,
             iniciarSesion,
             login,
-            logout
+            errores
         }
     }
 }
 </script>
 <style>
 @import '@/assets/style.css';
+
+.text-danger{
+  color: red;
+}
 </style>

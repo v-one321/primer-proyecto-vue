@@ -13,6 +13,7 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Item</th>
+                                        <th>Cliente</th>
                                         <th>Total</th>
                                         <th>Usuario</th>
                                         <th>Estado</th>
@@ -22,6 +23,7 @@
                                 <tbody>
                                     <tr v-for="(item, indice) in items" :key="item.id">
                                         <td>{{ indice + 1 }}</td>
+                                        <td>{{ item.clientes.nombre }} {{ item.clientes.apellido? item.clientes.apellido:'' }}</td>
                                         <td>{{ item.total }}</td>
                                         <td>{{ item.usuarios.name }}</td>
                                         <td><span class="badge" :class="item.estado ? 'bg-success' : 'bg-danger'">{{
@@ -110,15 +112,11 @@ export default {
     setup() {
         const router = useRouter()
         const items = ref([]);
-        const usuario = {
-            username: 'vladin321@gmail.com',
-            password: '78941557'
-        };
-        const basicAuth = btoa(usuario.username + ':' + usuario.password);
+        let token = localStorage.getItem('token');
         const headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Basic ' + basicAuth
+            'Authorization': 'Bearer ' + token
         }
         let urlBase = 'https://api.repuestosangel.net/api/';
         const paginacion = ref({
@@ -129,7 +127,11 @@ export default {
         });
         const detalle = ref({});
         onMounted(() => {
-            listar();
+            if(token == null){
+                router.push({path: '/login'});
+            }else{
+                listar();
+            }
         });
         const listar = async () => {
             try {
@@ -165,7 +167,7 @@ export default {
         const verDetalle = async (param) => {
             try {
                 const { data: { datos } } = await axios.get(urlBase + 'ventas/' + param, { headers });
-                detalle.value = datos[0];
+                detalle.value = datos;
             } catch (error) {
                 console.log(error)
             }

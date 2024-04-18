@@ -1,13 +1,12 @@
 <template>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body mb-3" data-bs-theme="dark">
-        <div class="container-fluid">
-            <router-link class="navbar-brand" to="/home">Navbar</router-link>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body mb-3"            data-bs-theme="dark">        
+            <!--<router-link class="navbar-brand" to="/home">Navbar</router-link>-->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
                         <router-link class="nav-link" to="/home">Home</router-link>
                     </li>
@@ -51,7 +50,7 @@
                     </li>
                 </ul>
             </form>
-        </div>
+        
     </nav>
 
     <!-- ABRE CONTENIDO DE LAS VISTAS-->

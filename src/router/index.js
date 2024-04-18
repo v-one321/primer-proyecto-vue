@@ -18,6 +18,7 @@ import ClientesComponent from "../views/SistemaVentas/Clientes.vue";
 import FormularioClienteComponent from "../views/SistemaVentas/FormularioCliente.vue";
 // compras
 import ComprasComponent from "../views/SistemaVentas/Compras.vue";
+import ComprasTableComponent from "@/views/SistemaVentas/ComprasTable.vue"
 
 const routes = [
   {
@@ -95,7 +96,11 @@ const routes = [
         component: FormularioClienteComponent
       },
       {
-        path: "/compras",
+        path: '/compras',
+        component: ComprasTableComponent
+      },
+      {
+        path: "/nuevaCompra",
         component: ComprasComponent,
       },
     ],
