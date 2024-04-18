@@ -28,6 +28,7 @@
                         <ul class="dropdown-menu">
                             <li><router-link class="dropdown-item" to="/productos">Productos</router-link></li>
                             <li><router-link class="dropdown-item" to="/proveedores">Proveedores</router-link></li>
+                            <li><router-link class="dropdown-item" to="/clientes">Clientes</router-link></li>
                             <li><router-link class="dropdown-item" to="/ventas">Ventas</router-link></li>
                         </ul>
                     </li>

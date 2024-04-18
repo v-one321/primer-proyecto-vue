@@ -103,7 +103,7 @@ export default {
             } catch (error) {
                 if (error.response.status == 422) {
                     detectados.value = error.response.data.errors;
-                } else if (condicion) {
+                } else {// if (condicion) {
                     alert('Contacte con el soporte de sistemas, Gracias')
                 }
             }

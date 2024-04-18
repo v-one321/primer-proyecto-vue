@@ -13,6 +13,9 @@ import ProveedoresComponent from "../views/SistemaVentas/Proveedores.vue";
 import FormularioProveedorComponent from "../views/SistemaVentas/FormularioProveedor.vue";
 // importamos perfilView
 import PerfilView from "../views/PerfilView.vue";
+// para clientes
+import ClientesComponent from "../views/SistemaVentas/Clientes.vue";
+import FormularioClienteComponent from "../views/SistemaVentas/FormularioCliente.vue";
 
 const routes = [
   {
@@ -80,6 +83,14 @@ const routes = [
       {
         path: "/proveedor-formulario/:idProveedor?",
         component: FormularioProveedorComponent
+      },
+      {
+        path: "/clientes",
+        component: ClientesComponent,
+      },
+      {
+        path: "/cliente-formulario/:idCliente?",
+        component: FormularioClienteComponent
       }
     ],
   },

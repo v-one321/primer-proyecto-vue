@@ -6,7 +6,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-6 mb-4">
-                                <h4>Proveedores</h4>
+                                <h4>Clientes</h4>
                             </div>
                             <div class="col-12 col-md-6 mb-4 text-end">
                                 <button type="button" class="btn btn-primary " @click="nuevoRegistro">Agregar</button>
@@ -19,7 +19,6 @@
                                                 <th>Item</th>
                                                 <th>Nombres y apellidos</th>
                                                 <th>Nro identificacion</th>
-                                                <th>Contacto</th>
                                                 <th>Estado</th>
                                                 <th>Operaciones</th>
                                             </tr>
@@ -30,7 +29,6 @@
                                                 <td>{{ item.nombre }} {{ item.apellido != null ? item.apellido : '' }}
                                                 </td>
                                                 <td>{{ item.identificacion }}</td>
-                                                <td>{{ item.contacto }}</td>
                                                 <td><span class="badge" :class="item.estado ? 'bg-success' : 'bg-danger'">{{
                                                         item.estado?'Activo':'Inactivo'}}</span></td>
                                                 <td>
@@ -100,7 +98,7 @@ export default {
         })
         const listar = async () => {
             try {
-                const { data: { datos } } = await axios.get(urlBase + 'proveedores?page=' + paginacion.value.pagina, { headers });
+                const { data: { datos } } = await axios.get(urlBase + 'clientes?page=' + paginacion.value.pagina, { headers });
                 items.value = datos.data;
                 paginacion.value.last_page = datos.last_page;
                 if (paginacion.value.last_page == paginacion.value.pagina) {
@@ -132,20 +130,20 @@ export default {
 
 
         const nuevoRegistro = () => {
-            router.push({ path: '/proveedor-formulario' });
+            router.push({ path: '/cliente-formulario' });
         }
 
         const editar = (param) => {
-            router.push({ path: '/proveedor-formulario/' + param });
+            router.push({ path: '/cliente-formulario/' + param });
         }
 
         const cambiarEstado = async (elid, tipo) => {
-            let confirmacion = confirm('Esta seguro de ' + tipo + ' el Proveedor?');
+            let confirmacion = confirm('Esta seguro de ' + tipo + ' el Cliente?');
             if(!confirmacion){
                 return;
             }
             try {
-                const { data } = await axios.delete(urlBase + 'proveedores/' + elid , { headers });
+                const { data } = await axios.delete(urlBase + 'clientes/' + elid , { headers });
                 listar();
             } catch (error) {
                 console.log(error);
