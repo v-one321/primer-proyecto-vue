@@ -5,8 +5,11 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-md-6 text-center mb-4">
-                                <button type="button" class="btn btn-primary" @click="nuevoRegistro">Agregar</button>
+                            <div class="col-12 col-md-6 mb-4">
+                                <h4>Productos</h4>
+                            </div>
+                            <div class="col-12 col-md-6 mb-4 text-end">
+                                <button type="button" class="btn btn-primary " @click="nuevoRegistro">Agregar</button>
                             </div>
                             <div class="col-12">
                                 <div class="table-responsive">

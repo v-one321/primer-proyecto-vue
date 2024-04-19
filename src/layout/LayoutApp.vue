@@ -8,28 +8,31 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/home">Home</router-link>
+                        <router-link class="nav-link" to="/home"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/about">About</router-link>
+                        <router-link class="nav-link" to="/productos"><i class="fas fa-cubes me-1"></i>Productos</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/contactos">Contactos</router-link>
+                        <router-link class="nav-link" to="/proveedores"><i class="fas fa-user-tag me-1"></i>Proveedores</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/api-rick">Rick y Morty</router-link>
+                        <router-link class="nav-link" to="/clientes"><i class="fas fa-users me-1"></i>Clientes</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/compras"><i class="fas fa-cart-plus me-1"></i>Compras</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/ventas"><i class="fas fa-shopping-cart me-1"></i>Ventas</router-link>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Sistema de Ventas
+                            <i class="fas fa-window-restore me-1"></i>Otras paginas
                         </a>
                         <ul class="dropdown-menu">
-                            <li><router-link class="dropdown-item" to="/productos">Productos</router-link></li>
-                            <li><router-link class="dropdown-item" to="/proveedores">Proveedores</router-link></li>
-                            <li><router-link class="dropdown-item" to="/clientes">Clientes</router-link></li>
-                            <li><router-link class="dropdown-item" to="/compras">Compras</router-link></li>
-                            <li><router-link class="dropdown-item" to="/ventas">Ventas</router-link></li>
+                            <li><router-link class="dropdown-item" to="/contactos">Contactos</router-link></li>
+                            <li><router-link class="dropdown-item" to="/api-rick">Rick y Morty</router-link></li>
                         </ul>
                     </li>
                 </ul>
@@ -44,8 +47,8 @@
                             {{ usuario.name }}
                         </a>
                         <ul class="dropdown-menu">
-                            <li><router-link class="dropdown-item" to="/perfil">Perfil</router-link></li>
-                            <li><button type="button" class="dropdown-item" @click="cerrarSesion">Salir</button></li>
+                            <li><router-link class="dropdown-item" to="/perfil"><i class="fas fa-user me-1"></i>Perfil</router-link></li>
+                            <li><button type="button" class="dropdown-item" @click="cerrarSesion"><i class="fas fa-power-off me-1"></i>Salir</button></li>
                         </ul>
                     </li>
                 </ul>
