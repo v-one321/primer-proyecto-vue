@@ -25,7 +25,7 @@
                                         <td>{{ indice + 1 }}</td>
                                         <td>{{ item.clientes.nombre }} {{ item.clientes.apellido? item.clientes.apellido:'' }}</td>
                                         <td>{{ item.total }}</td>
-                                        <td>{{ item.usuarios.name }}</td>
+                                        <td>{{ item.usuario.name }}</td>
                                         <td><span class="badge" :class="item.estado ? 'bg-success' : 'bg-danger'">{{
                                             item.estado ?
                                                 'Activo' : 'Inactivo' }}</span></td>
@@ -78,10 +78,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item, indice) in detalle.detalle_venta" :key="item.id">
+                                <tr v-for="(item, indice) in detalle.detalles" :key="item.id">
                                     <td>{{ indice + 1 }}</td>
-                                    <td>{{ item.producto.nombre }}</td>
-                                    <td>{{ item.producto.codigo }}</td>
+                                    <td>{{ item.productos.nombre }}</td>
+                                    <td>{{ item.productos.codigo }}</td>
                                     <td>{{ item.cantidad }}</td>
                                     <td>{{ item.precio_unitario }}</td>
                                     <td>{{ item.total }}</td>
@@ -118,7 +118,8 @@ export default {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        let urlBase = 'https://api.repuestosangel.net/api/';
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         const paginacion = ref({
             pagina: 1,
             next: true,

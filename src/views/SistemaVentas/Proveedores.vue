@@ -84,7 +84,8 @@ export default {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        let urlBase = 'https://api.repuestosangel.net/api/';
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         onMounted(() => {
             if (token == null) {
                 router.push({ path: '/login' });

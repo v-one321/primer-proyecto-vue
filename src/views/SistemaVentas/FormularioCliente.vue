@@ -58,7 +58,8 @@ export default {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        let urlBase = 'https://api.repuestosangel.net/api/';
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         const errores = ref({});
         // idCliente
         let idCliente = router.currentRoute.value.params.idCliente;

@@ -110,7 +110,7 @@
                                         <small class="text-mutted">{{ car.codigo }}</small>
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" :value="car.stock" min="1">
+                                        <input type="text" :id="'cant' + car.id" class="form-control" :value="car.stock" @change="cambiarCantidadItem(car, $event.target.value)" @keyup="cambiarCantidadItem(car, $event.target.value)" min="1">
                                     </td>
                                     <td class="text-end">{{ car.precio_compra }}</td>
                                     <td class="text-right">
@@ -161,7 +161,8 @@ export default {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        let urlBase = 'https://api.repuestosangel.net/api/';
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         onMounted(() => {
             if (token == null) {
                 router.push({ path: '/login' });
@@ -234,12 +235,37 @@ export default {
                 item.producto_id = item.id;
                 item.precio_unitario = item.precio_compra;
                 item.precio_total = item.precio_compra;
+                // console.log(item);
                 carrito.value.push(item);
             }
             calcularTotal();
             localStorage.setItem('carritoCompras', JSON.stringify(carrito.value));
             // console.log(carrito.value);
         }
+
+        const cambiarCantidadItem = (item, cantidad) => {
+            console.log(item, cantidad);
+            if(parseFloat(cantidad) <= 0 ){
+                alert("la cantidad debe ser mayor a 1");
+                return;
+            }
+            let existe = carrito.value.find(elem => elem.id == item.id);
+            if (existe) {
+                // if(parseFloat(cantidad) > parseFloat(existe.cantidad) ){
+                //     alert("No hay suficientes unidadaes disponibles!, la cantidad existente es: "+existe.cantidad);
+                //     existe.stock = parseFloat(existe.cantidad);
+                //     console.log(document.getElementById("cant" + item.id));
+                // } else {
+                //     existe.stock = (!isNaN(cantidad))?parseFloat(cantidad) : 1;
+                // }
+                existe.stock = (!isNaN(cantidad))?parseFloat(cantidad) : 1; // COMPRAS
+                document.getElementById("cant" + item.id).value = parseFloat(existe.stock);
+                existe.precio_total = parseFloat(existe.precio_compra) * parseFloat(existe.stock);
+                calcularTotal();
+                localStorage.setItem('carritoCompras', JSON.stringify(carrito.value));
+            }
+        }
+
         const calcularTotal = () => {
             let suma = 0;
             carrito.value.forEach(item => {
@@ -318,7 +344,8 @@ export default {
             total,
             guardarCompra,
             eliminarCarrito,
-            cancelarCompra
+            cancelarCompra,
+            cambiarCantidadItem
         }
     }
 }

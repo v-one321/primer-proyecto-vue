@@ -71,7 +71,8 @@ export default {
             email: '',
             password: '',
         })
-        let urlBase = "https://api.repuestosangel.net/api/";
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         const errores = ref({});
         onMounted(() => {
             // verificar si existe el usuario y el token en el localStorage

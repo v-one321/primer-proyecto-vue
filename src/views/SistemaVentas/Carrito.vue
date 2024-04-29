@@ -149,7 +149,8 @@ export default {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        let urlBase = "https://api.repuestosangel.net/api/";
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         const paginacion = ref({
             pagina: 1,
             next: true,
@@ -173,9 +174,9 @@ export default {
                 const {
                     data: { datos },
                 } = await axios.get(
-                    urlBase + "productos-activos?page=" + paginacion.value.pagina,
+                    urlBase + "productos?page=" + paginacion.value.pagina,
                     { headers }
-                );
+                ); // -activos
                 items.value = datos.data;
                 paginacion.value.last_page = datos.last_page;
                 if (paginacion.value.last_page == paginacion.value.pagina) {

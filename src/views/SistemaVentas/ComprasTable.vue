@@ -24,12 +24,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(item, indice) in items" :key="item.id">
-                                            <td>{{ indice + 1 }}</td>
+                                        <tr v-for="(item, indice1) in items" :key="item.id">
+                                            <td>{{ indice1 + 1 }}</td>
                                             <td>{{ item.proveedores.nombre }} {{ item.proveedores.apellido ?
                                                 item.proveedores.apellido : '' }}</td>
                                             <td>{{ item.total }}</td>
-                                            <td>{{ item.usuarios.name }}</td>
+                                            <td>{{ item.usuario.name }}</td>
                                             <td><span class="badge" :class="item.estado ? 'bg-success' : 'bg-danger'">{{
                                                 item.estado ? 'Activo' : 'Inactivo' }}</span></td>
                                             <td class="text-center">
@@ -74,7 +74,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
+                    <div v-if="detalle.detalle_compra" class="table-responsive">
                         <table class="table  table-hover">
                             <thead class="table-dark">
                                 <tr>
@@ -127,7 +127,8 @@ export default {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token
         }
-        let urlBase = 'https://api.repuestosangel.net/api/';
+        // let urlBase = "https://api.repuestosangel.net/api/";
+        let urlBase = "http://hamilobackuno.test/api/";
         const paginacion = ref({
             pagina: 1,
             next: true,
@@ -145,7 +146,9 @@ export default {
         const listar = async () => {
             try {
                 const { data: { datos } } = await axios.get(urlBase + 'compras?page=' + paginacion.value.pagina, { headers });
+                // console.log(datos);
                 items.value = datos.data;
+                console.log(items.value);
                 paginacion.value.last_page = datos.last_page;
                 if (paginacion.value.last_page == paginacion.value.pagina) {
                     paginacion.value.next = false;

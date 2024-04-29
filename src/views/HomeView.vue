@@ -97,6 +97,8 @@ export default {
   name: 'BarChart',
   components: { Bar, Pie },
   setup() {
+    // let urlBase = "https://api.repuestosangel.net/api/";
+    let urlBase = "http://hamilobackuno.test/api/";
     const totales = ref({});
     let token = localStorage.getItem('token');
     let user = JSON.parse(localStorage.getItem('usuario'));
@@ -146,13 +148,13 @@ export default {
       let colorBarra = [];
       let bordeBarra = [];
       try {
-        const { data } = await axios.get('https://api.repuestosangel.net/api/dashboard', { headers });
+        const { data } = await axios.get(urlBase + 'dashboard', { headers });
         totales.value = {
           total_ventas: data.total_ventas,
           total_compras: data.total_compras,
           total_productos: data.total_productos,
           total_clientes: data.total_clientes,
-          total_proveedores: data.total_prorveedores
+          total_proveedores: data.total_proveedores
         }
         data.chartVentas.forEach(item => {
           dataTorta.push(item.total_ventas);
